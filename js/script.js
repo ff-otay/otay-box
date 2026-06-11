@@ -210,6 +210,53 @@ document.addEventListener('DOMContentLoaded', () => {
             menuIcon.classList.add('fa-bars');
         }
     });
+    
+    // Inject extra actions into mobile menu
+    if (mobileMenu && !mobileMenu.querySelector('.mobile-extra')) {
+        const extraDiv = document.createElement('div');
+        extraDiv.className = 'mobile-extra';
+        extraDiv.style.display = 'flex';
+        extraDiv.style.justifyContent = 'center';
+        extraDiv.style.gap = '1.5rem';
+        extraDiv.style.marginTop = '1rem';
+        extraDiv.style.borderTop = '1px solid var(--border-color)';
+        extraDiv.style.paddingTop = '1rem';
+        
+        extraDiv.innerHTML = `
+            <a href="#" class="icon-btn search-btn-mobile" aria-label="Rechercher"><i class="fa-solid fa-magnifying-glass"></i></a>
+            <a href="profil.html" class="icon-btn" aria-label="Mon compte"><i class="fa-regular fa-user"></i></a>
+            <button class="icon-btn theme-toggle-mobile" aria-label="Basculer le thème">
+                <i class="fa-solid fa-sun light-icon"></i>
+                <i class="fa-solid fa-moon dark-icon"></i>
+            </button>
+        `;
+        mobileMenu.appendChild(extraDiv);
+        
+        // Theme toggle logic for mobile button
+        const mobileThemeBtn = extraDiv.querySelector('.theme-toggle-mobile');
+        mobileThemeBtn.addEventListener('click', () => {
+            const currentTheme = htmlElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            htmlElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('otay-theme', newTheme);
+        });
+        
+        // Search toggle logic for mobile button
+        const mobileSearchBtn = extraDiv.querySelector('.search-btn-mobile');
+        mobileSearchBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const searchOverlay = document.getElementById('global-search-overlay');
+            if (searchOverlay) {
+                searchOverlay.classList.add('active');
+                const searchInput = searchOverlay.querySelector('.search-overlay-input');
+                if (searchInput) setTimeout(() => searchInput.focus(), 100);
+            }
+            // Close mobile menu
+            mobileMenu.classList.remove('active');
+            menuIcon.classList.remove('fa-xmark');
+            menuIcon.classList.add('fa-bars');
+        });
+    }
 
     // Close mobile menu when a link is clicked
     mobileLinks.forEach(link => {

@@ -2405,3 +2405,12 @@ body:has(.premium-editorial) {
         display: none;
     }
 }
+
+/* Hide extra nav actions on mobile and tablet to prevent overflow */
+@media(max-width: 768px) {
+    .nav-actions .search-btn,
+    .nav-actions .profile-btn,
+    .nav-actions .theme-toggle {
+        display: none !important;
+    }
+}
