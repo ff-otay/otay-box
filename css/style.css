@@ -295,8 +295,8 @@ section[id] {
 }
 
 [data-theme="dark"] .logo-img {
-    /* Removes the white box and shifts the logo to a pure, elegant white silhouette for dark mode */
-    filter: brightness(0) invert(1);
+    /* Soft warm white silhouette for dark mode */
+    filter: brightness(0) invert(1) sepia(0.2) saturate(0.5);
 }
 
 .nav-links {
@@ -1685,6 +1685,14 @@ section[id] {
 
     .hero-ctas {
         justify-content: center;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .hero-ctas .btn {
+        width: 100%;
+        max-width: 300px;
+        text-align: center;
     }
 
     .services-container,
@@ -1707,11 +1715,17 @@ section[id] {
 
 @media screen and (max-width: 480px) {
     .hero-title {
-        font-size: 2.2rem;
+        font-size: 2rem;
     }
 
     .hero-ctas {
         flex-direction: column;
+        align-items: center;
+    }
+
+    .hero-ctas .btn {
+        width: 100%;
+        max-width: 280px;
     }
 
     .box-info {
@@ -2414,3 +2428,91 @@ body:has(.premium-editorial) {
         display: none !important;
     }
 }
+
+/* =========================================================
+   MOBILE FIXES — Box Detail Page & Global
+   ========================================================= */
+
+/* Smaller elegant tab buttons on mobile */
+@media(max-width: 768px) {
+    .btn-elegant, .tab-btn {
+        padding: 0.6rem 1.4rem !important;
+        font-size: 0.88rem !important;
+    }
+
+    .tabs-header {
+        gap: 0.6rem !important;
+        margin-bottom: 2rem !important;
+    }
+
+    /* Editorial hero stacks vertically */
+    .editorial-hero-layout {
+        flex-direction: column !important;
+        gap: 2rem !important;
+    }
+
+    .editorial-hero-gallery {
+        width: 100% !important;
+    }
+
+    .hero-main-image img {
+        width: 100% !important;
+        max-height: 300px !important;
+        object-fit: cover !important;
+    }
+
+    .hero-sub-images {
+        display: flex !important;
+        gap: 0.5rem !important;
+    }
+
+    .hero-sub-images img {
+        width: calc(33.333% - 0.35rem) !important;
+        height: 80px !important;
+        object-fit: cover !important;
+    }
+
+    /* Quantity + add to cart responsive */
+    .editorial-actions {
+        flex-direction: column !important;
+        gap: 1rem !important;
+    }
+
+    .btn-elegant.add-to-cart-btn {
+        width: 100% !important;
+        text-align: center !important;
+    }
+
+    /* Section padding reduction */
+    .editorial-inside {
+        padding: 3rem 1rem !important;
+        margin: 1rem !important;
+    }
+}
+
+/* Dark mode: ensure editorial page text is readable */
+[data-theme="dark"] .editorial-hero-info,
+[data-theme="dark"] .editorial-badge,
+[data-theme="dark"] .editorial-story p,
+[data-theme="dark"] .editorial-benefits-list span {
+    color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .editorial-title {
+    color: var(--accent) !important;
+}
+
+[data-theme="dark"] .editorial-price {
+    color: var(--text-primary) !important;
+}
+
+/* Image lazy loading fade-in */
+img[loading="lazy"] {
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+img[loading="lazy"].loaded {
+    opacity: 1;
+}
+

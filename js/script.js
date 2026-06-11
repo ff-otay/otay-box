@@ -92,6 +92,15 @@ window.otayCart = {
 document.addEventListener('DOMContentLoaded', () => {
     window.otayCart.updateUI();
 
+    // --- Lazy Image Fade-In ---
+    document.querySelectorAll('img[loading="lazy"]').forEach(img => {
+        if (img.complete) {
+            img.classList.add('loaded');
+        } else {
+            img.addEventListener('load', () => img.classList.add('loaded'));
+        }
+    });
+
     // --- Current Year in Footer ---
     const yearSpan = document.getElementById('current-year');
     if (yearSpan) {
@@ -102,8 +111,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const themeBtn = document.querySelector('.theme-toggle');
     const htmlElement = document.documentElement;
 
-    // Check local storage for theme preference, default to dark
-    const savedTheme = localStorage.getItem('otay-theme') || 'dark';
+    // Check local storage for theme preference, default to light
+    const savedTheme = localStorage.getItem('otay-theme') || 'light';
     htmlElement.setAttribute('data-theme', savedTheme);
 
     themeBtn.addEventListener('click', () => {
@@ -316,14 +325,35 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- Mini Cart Interaction (Stub removed, logic handled globally) ---
-    // If there are any static buttons that need simple UI feedback, we leave this skeleton,
-    // but the actual addition is handled where buttons have product data context.
+    // --- Add to Cart (Box Detail Page) ---
+    const addToCartBtn = document.querySelector('.add-to-cart-btn');
+    if (addToCartBtn) {
+        addToCartBtn.addEventListener('click', function() {
+            const qty = parseInt(document.getElementById('qty')?.textContent || '1');
+            const boxProduct = {
+                id: 'box-jardin-douceur',
+                title: 'Box Jardin de Douceur',
+                price: '59 TND',
+                img: 'assets/box-jardin-douceur.png'
+            };
+            window.otayCart.add(boxProduct, qty);
+            const originalHTML = this.innerHTML;
+            this.innerHTML = '<i class="fa-solid fa-check"></i> Ajouté au panier !';
+            this.style.backgroundColor = '#4b6c4f';
+            this.style.color = '#fff';
+            setTimeout(() => {
+                this.innerHTML = originalHTML;
+                this.style.backgroundColor = '';
+                this.style.color = '';
+            }, 2500);
+        });
+    }
+
+    // --- Static add-to-cart buttons (boutique page) ---
     const staticCartBtns = document.querySelectorAll('.add-to-cart-btn-static');
     staticCartBtns.forEach(btn => {
         btn.addEventListener('click', function(e) {
             e.preventDefault();
-            // Just UI feedback
             const originalHTML = this.innerHTML;
             this.innerHTML = '<i class="fa-solid fa-check"></i> Ajouté';
             this.style.backgroundColor = 'var(--accent)';
