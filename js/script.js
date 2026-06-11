@@ -3,6 +3,12 @@
  * Handles theme toggle, navbar effects, scroll animations, mobile menu, and cart
  */
 
+// Apply saved theme IMMEDIATELY to prevent flash of wrong theme
+(function() {
+    const saved = localStorage.getItem('otay-theme') || 'light';
+    document.documentElement.setAttribute('data-theme', saved);
+})();
+
 // Global Product Data
 const productsData = [
     { id: 1, title: "Infusion Douce Nuit", category: "infusions", sub: "Tisane artisanale", price: "12,90 TND", stars: 5, reviews: 56, img: "assets/Sachets d'infusion ÔTAY.png" },
@@ -111,17 +117,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const themeBtn = document.querySelector('.theme-toggle');
     const htmlElement = document.documentElement;
 
-    // Check local storage for theme preference, default to light
-    const savedTheme = localStorage.getItem('otay-theme') || 'light';
-    htmlElement.setAttribute('data-theme', savedTheme);
-
-    themeBtn.addEventListener('click', () => {
-        const currentTheme = htmlElement.getAttribute('data-theme');
-        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-
-        htmlElement.setAttribute('data-theme', newTheme);
-        localStorage.setItem('otay-theme', newTheme);
-    });
+    // Theme already applied by IIFE above; just wire the button
+    if (themeBtn) {
+        themeBtn.addEventListener('click', () => {
+            const currentTheme = htmlElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            htmlElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('otay-theme', newTheme);
+        });
+    }
 
     // Remove old inline onclick handlers
     document.querySelectorAll('.search-btn, .profile-btn, .cart-btn').forEach(btn => {
@@ -209,7 +213,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const mobileLinks = document.querySelectorAll('.mobile-link');
     const menuIcon = menuBtn.querySelector('i');
 
-    menuBtn.addEventListener('click', () => {
+    function closeMobileMenu() {
+        mobileMenu.classList.remove('active');
+        menuIcon.classList.remove('fa-xmark');
+        menuIcon.classList.add('fa-bars');
+    }
+
+    menuBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
         mobileMenu.classList.toggle('active');
         if (mobileMenu.classList.contains('active')) {
             menuIcon.classList.remove('fa-bars');
@@ -217,6 +228,16 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             menuIcon.classList.remove('fa-xmark');
             menuIcon.classList.add('fa-bars');
+        }
+    });
+
+    // Close menu when clicking outside
+    document.addEventListener('click', (e) => {
+        if (mobileMenu.classList.contains('active') &&
+            !mobileMenu.contains(e.target) &&
+            e.target !== menuBtn &&
+            !menuBtn.contains(e.target)) {
+            closeMobileMenu();
         }
     });
     
@@ -243,7 +264,8 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Theme toggle logic for mobile button
         const mobileThemeBtn = extraDiv.querySelector('.theme-toggle-mobile');
-        mobileThemeBtn.addEventListener('click', () => {
+        mobileThemeBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
             const currentTheme = htmlElement.getAttribute('data-theme');
             const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
             htmlElement.setAttribute('data-theme', newTheme);
@@ -254,26 +276,56 @@ document.addEventListener('DOMContentLoaded', () => {
         const mobileSearchBtn = extraDiv.querySelector('.search-btn-mobile');
         mobileSearchBtn.addEventListener('click', (e) => {
             e.preventDefault();
-            const searchOverlay = document.getElementById('global-search-overlay');
-            if (searchOverlay) {
-                searchOverlay.classList.add('active');
-                const searchInput = searchOverlay.querySelector('.search-overlay-input');
-                if (searchInput) setTimeout(() => searchInput.focus(), 100);
-            }
-            // Close mobile menu
-            mobileMenu.classList.remove('active');
-            menuIcon.classList.remove('fa-xmark');
-            menuIcon.classList.add('fa-bars');
+            e.stopPropagation();
+            closeMobileMenu();
         });
     }
 
     // Close mobile menu when a link is clicked
     mobileLinks.forEach(link => {
         link.addEventListener('click', () => {
-            mobileMenu.classList.remove('active');
-            menuIcon.classList.remove('fa-xmark');
-            menuIcon.classList.add('fa-bars');
+            closeMobileMenu();
         });
+    });
+
+    // --- Like / Wishlist Buttons ---
+    const likedProducts = JSON.parse(localStorage.getItem('otayLiked') || '[]');
+
+    function saveLiked() {
+        localStorage.setItem('otayLiked', JSON.stringify(likedProducts));
+    }
+
+    // Attach like logic to static heart buttons (boutique page dynamically adds them)
+    // We use delegation on document for dynamically created buttons
+    document.addEventListener('click', (e) => {
+        const heartBtn = e.target.closest('.prod-heart-btn');
+        if (!heartBtn) return;
+        e.stopPropagation();
+        const card = heartBtn.closest('.product-card-mock');
+        const productTitle = card ? card.querySelector('h3')?.textContent || '' : '';
+        const icon = heartBtn.querySelector('i');
+        if (!icon) return;
+
+        if (icon.classList.contains('fa-regular')) {
+            // Like it
+            icon.classList.remove('fa-regular');
+            icon.classList.add('fa-solid');
+            heartBtn.style.color = '#E2725B';
+            if (productTitle && !likedProducts.includes(productTitle)) {
+                likedProducts.push(productTitle);
+                saveLiked();
+            }
+        } else {
+            // Unlike it
+            icon.classList.remove('fa-solid');
+            icon.classList.add('fa-regular');
+            heartBtn.style.color = '';
+            const idx = likedProducts.indexOf(productTitle);
+            if (idx > -1) {
+                likedProducts.splice(idx, 1);
+                saveLiked();
+            }
+        }
     });
 
     // --- Scroll Animations ---

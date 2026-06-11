@@ -1711,7 +1711,6 @@ section[id] {
         text-align: center;
     }
 }
-}
 
 @media screen and (max-width: 480px) {
     .hero-title {
@@ -1752,8 +1751,11 @@ section[id] {
 }
 
 /* Force override for body background if .premium-editorial is present */
-body:has(.premium-editorial) {
+[data-theme="light"] body:has(.premium-editorial) {
     background-color: var(--clr-cream);
+}
+[data-theme="dark"] body:has(.premium-editorial) {
+    background-color: var(--bg-main);
 }
 
 .premium-editorial h1,
@@ -2173,13 +2175,6 @@ body:has(.premium-editorial) {
     /* =========================
    LUXE PRODUCT PREMIUM
 ========================= */
-
-    body {
-        margin: 0;
-        font-family: 'Poppins', sans-serif;
-        background: #f7f6f2;
-        color: #1a1a1a;
-    }
 
     /* LAYOUT */
     .lux-product {

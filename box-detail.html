@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr" data-theme="light">
+<html lang="fr">
 
 <head>
     <meta charset="UTF-8">
@@ -17,6 +17,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="css/style.css">
+    <script>!function(){var t=localStorage.getItem('otay-theme')||'light';document.documentElement.setAttribute('data-theme',t)}();</script>
+
 </head>
 
 <body>
@@ -154,12 +156,12 @@
                 <div class="box-content-tabs">
                     <!-- Trigger buttons -->
                     <div class="tabs-header" style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; margin-bottom: 4rem;">
-                        <button class="btn-elegant tab-btn active" onclick="openBoxTab('tab-tisane1', this)">Éveil du Jardin</button>
-                        <button class="btn-elegant tab-btn" onclick="openBoxTab('tab-tisane2', this)">Velours de Rose</button>
-                        <button class="btn-elegant tab-btn" onclick="openBoxTab('tab-tisane3', this)">Brume Apaisante</button>
-                        <button class="btn-elegant tab-btn" onclick="openBoxTab('tab-accessoire', this)">L'infusette</button>
-                        <button class="btn-elegant tab-btn" onclick="openBoxTab('tab-mug', this)">Le mug</button>
-                        <button class="btn-elegant tab-btn" onclick="openBoxTab('tab-guide', this)">Le guide rituel</button>
+                        <button class="tab-btn active" onclick="openBoxTab('tab-tisane1', this)">Éveil du Jardin</button>
+                        <button class="tab-btn" onclick="openBoxTab('tab-tisane2', this)">Velours de Rose</button>
+                        <button class="tab-btn" onclick="openBoxTab('tab-tisane3', this)">Brume Apaisante</button>
+                        <button class="tab-btn" onclick="openBoxTab('tab-accessoire', this)">L'infusette</button>
+                        <button class="tab-btn" onclick="openBoxTab('tab-mug', this)">Le mug</button>
+                        <button class="tab-btn" onclick="openBoxTab('tab-guide', this)">Le guide rituel</button>
                     </div>
                     
                     <!-- Tab Content: Tisane 1 -->
@@ -371,6 +373,18 @@
                     .horizontal-card .inside-info h3 {
                         font-size: 2rem;
                     }
+                    /* Fix tab buttons on mobile: no width:100%, allow natural wrap */
+                    .tab-btn {
+                        width: auto !important;
+                        flex: 0 0 auto !important;
+                        white-space: nowrap;
+                    }
+                    .tabs-header {
+                        justify-content: center !important;
+                        overflow-x: auto !important;
+                        flex-wrap: wrap !important;
+                        padding-bottom: 0.5rem;
+                    }
                 }
             </style>
             
@@ -444,6 +458,73 @@
 
     <!-- Scripts -->
     <script src="js/script.js"></script>
+
+    <!-- Dark mode overrides for box-detail editorial elements -->
+    <style>
+        [data-theme="dark"] .premium-editorial {
+            background-color: var(--bg-main) !important;
+            color: var(--text-primary) !important;
+        }
+        [data-theme="dark"] body:has(.premium-editorial) {
+            background-color: var(--bg-main) !important;
+        }
+        [data-theme="dark"] .premium-editorial h1,
+        [data-theme="dark"] .premium-editorial h2,
+        [data-theme="dark"] .premium-editorial h3 {
+            color: var(--text-primary) !important;
+        }
+        [data-theme="dark"] .editorial-story {
+            color: var(--text-secondary) !important;
+        }
+        [data-theme="dark"] .inside-card {
+            background: var(--bg-surface) !important;
+            border-color: var(--border-color) !important;
+        }
+        [data-theme="dark"] .horizontal-card .inside-info h3 {
+            color: var(--text-primary) !important;
+        }
+        [data-theme="dark"] .inside-desc,
+        [data-theme="dark"] .horizontal-card .inside-info .inside-desc {
+            color: var(--text-secondary) !important;
+        }
+        [data-theme="dark"] .editorial-inside {
+            background-color: rgba(141,172,149,0.08) !important;
+            border-color: rgba(141,172,149,0.2) !important;
+        }
+        [data-theme="dark"] .editorial-inside h2 {
+            color: var(--text-primary) !important;
+        }
+        [data-theme="dark"] .editorial-inside p {
+            color: var(--text-secondary) !important;
+        }
+        [data-theme="dark"] .tab-btn {
+            color: var(--text-secondary) !important;
+            border-color: var(--accent) !important;
+        }
+        [data-theme="dark"] .tab-btn.active,
+        [data-theme="dark"] .tab-btn:hover {
+            background-color: var(--accent) !important;
+            color: #fff !important;
+        }
+        [data-theme="dark"] .footer {
+            background-color: var(--bg-surface) !important;
+        }
+        [data-theme="dark"] .footer-logo-text,
+        [data-theme="dark"] .footer-heading,
+        [data-theme="dark"] .footer-desc {
+            color: var(--text-primary) !important;
+        }
+        [data-theme="dark"] .footer-links a {
+            color: var(--text-secondary) !important;
+        }
+        [data-theme="dark"] .editorial-ritual {
+            background: var(--bg-surface) !important;
+        }
+        [data-theme="dark"] .ritual-title,
+        [data-theme="dark"] .ritual-desc {
+            color: var(--text-primary) !important;
+        }
+    </style>
 </body>
 
 </html>

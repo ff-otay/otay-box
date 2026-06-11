@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr" data-theme="light">
+<html lang="fr">
 
 <head>
     <meta charset="UTF-8">
@@ -14,6 +14,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="css/style.css">
+    <script>!function(){var t=localStorage.getItem('otay-theme')||'light';document.documentElement.setAttribute('data-theme',t)}();</script>
+
 </head>
 
 <body>
@@ -78,8 +80,11 @@
 
     <main class="main-content">
         <!-- Hero Section (Full width background image with text overlay) -->
-        <section class="boutique-hero">
-            <div class="container hero-container-overlay">
+        <section class="boutique-hero" id="boutique-hero-slider">
+            <div class="boutique-hero-slide active" style="background-image: linear-gradient(to right, rgba(250, 248, 245, 0.98) 35%, rgba(250, 248, 245, 0.75) 60%, rgba(250, 248, 245, 0.15) 100%), url('assets/yukon-haughton-Fkt0y2UZg88-unsplash.jpg');"></div>
+            <div class="boutique-hero-slide" style="background-image: linear-gradient(to right, rgba(250, 248, 245, 0.98) 35%, rgba(250, 248, 245, 0.75) 60%, rgba(250, 248, 245, 0.15) 100%), url('assets/herbal_infusions_tea_1779202539010.png');"></div>
+            <div class="boutique-hero-slide" style="background-image: linear-gradient(to right, rgba(250, 248, 245, 0.98) 35%, rgba(250, 248, 245, 0.75) 60%, rgba(250, 248, 245, 0.15) 100%), url('assets/Contenu de box.png');"></div>
+            <div class="container hero-container-overlay" style="position: relative; z-index:2;">
                 <div class="hero-text-block">
                     <h1 class="hero-title-main">
                         Prenez le temps. <br>
@@ -93,9 +98,9 @@
             </div>
             <!-- Slider Dots -->
             <div class="slider-dots">
-                <span class="dot active"></span>
-                <span class="dot"></span>
-                <span class="dot"></span>
+                <span class="dot active" data-index="0"></span>
+                <span class="dot" data-index="1"></span>
+                <span class="dot" data-index="2"></span>
             </div>
         </section>
 
@@ -227,12 +232,6 @@
 
     <!-- Specific styles for the Boutique redesign -->
     <style>
-        /* CSS resets & custom variables for the light mockup look */
-        body {
-            background-color: #FAF8F5 !important; /* Soft premium cream background */
-            color: #2F2A25 !important; /* Dark warm coffee text */
-        }
-
         /* Promo Bar */
         .promo-bar {
             background-color: #5B705F; /* Dark Sage Green */
@@ -291,17 +290,29 @@
             color: #FFFFFF !important;
         }
 
-        /* Hero Section (Cover Background Image style) */
-        .boutique-hero {
-            background-image: linear-gradient(to right, rgba(250, 248, 245, 0.98) 35%, rgba(250, 248, 245, 0.75) 60%, rgba(250, 248, 245, 0.15) 100%), url('assets/yukon-haughton-Fkt0y2UZg88-unsplash.jpg');
-            background-size: cover;
-            background-position: center 30%;
-            background-repeat: no-repeat;
+        /* Hero Section (Slideshow) */
+        #boutique-hero-slider {
+            position: relative;
             height: 520px;
             display: flex;
             align-items: center;
-            position: relative;
+            overflow: hidden;
             width: 100%;
+        }
+        .boutique-hero-slide {
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center 30%;
+            background-repeat: no-repeat;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+        }
+        .boutique-hero-slide.active {
+            opacity: 1;
+        }
+        .boutique-hero {
+            position: relative;
         }
         .hero-container-overlay {
             width: 100%;
@@ -437,8 +448,10 @@
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 2rem;
+            justify-items: center;
         }
         .product-card-mock {
+            width: 100%;
             background-color: #FFFFFF;
             border-radius: 12px;
             overflow: hidden;
@@ -914,6 +927,12 @@
         @media (max-width: 768px) {
             .products-grid-mock {
                 grid-template-columns: repeat(2, 1fr);
+                justify-items: center;
+            }
+            /* Center a lone last card when odd */
+            .products-grid-mock > .product-card-mock:last-child:nth-child(odd) {
+                grid-column: 1 / -1;
+                max-width: 50%;
             }
             .product-card-mock:last-child {
                 display: flex; /* Show again to have even count */
@@ -962,6 +981,12 @@
         @media (max-width: 480px) {
             .products-grid-mock {
                 grid-template-columns: 1fr;
+                justify-items: center;
+            }
+            /* On single column, reset the span */
+            .products-grid-mock > .product-card-mock:last-child:nth-child(odd) {
+                grid-column: auto;
+                max-width: 100%;
             }
             .categories-circles-grid {
                 grid-template-columns: 1fr;
@@ -1171,8 +1196,155 @@
         });
     </script>
 
+    <!-- Hero Slideshow Script -->
+    <script>
+        (function() {
+            const slides = document.querySelectorAll('.boutique-hero-slide');
+            const dots = document.querySelectorAll('.slider-dots .dot');
+            let currentSlide = 0;
+            let timer;
+
+            // Dark-mode aware gradient — reads theme at slide time
+            function getBgGradient() {
+                const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+                if (isDark) {
+                    return 'linear-gradient(to right, rgba(18,18,18,0.98) 35%, rgba(18,18,18,0.75) 60%, rgba(18,18,18,0.15) 100%)';
+                }
+                return 'linear-gradient(to right, rgba(250,248,245,0.98) 35%, rgba(250,248,245,0.75) 60%, rgba(250,248,245,0.15) 100%)';
+            }
+
+            const slideImages = [
+                "assets/yukon-haughton-Fkt0y2UZg88-unsplash.jpg",
+                "assets/herbal_infusions_tea_1779202539010.png",
+                "assets/Contenu de box.png"
+            ];
+
+            function goToSlide(index) {
+                slides[currentSlide].classList.remove('active');
+                dots[currentSlide].classList.remove('active');
+                currentSlide = index;
+                // Update gradient on transition in case theme changed
+                const grad = getBgGradient();
+                slides[currentSlide].style.backgroundImage = `${grad}, url('${slideImages[currentSlide]}')`;
+                slides[currentSlide].classList.add('active');
+                dots[currentSlide].classList.add('active');
+            }
+
+            function nextSlide() {
+                goToSlide((currentSlide + 1) % slides.length);
+            }
+
+            // Auto-play every 4s
+            timer = setInterval(nextSlide, 4000);
+
+            // Dot click
+            dots.forEach(dot => {
+                dot.addEventListener('click', () => {
+                    clearInterval(timer);
+                    goToSlide(parseInt(dot.getAttribute('data-index')));
+                    timer = setInterval(nextSlide, 4000);
+                });
+            });
+
+            // Re-apply gradient when theme changes
+            const observer = new MutationObserver(() => {
+                const grad = getBgGradient();
+                slides.forEach((slide, i) => {
+                    slide.style.backgroundImage = `${grad}, url('${slideImages[i]}')`;
+                });
+            });
+            observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+        })();
+    </script>
+
+    <!-- Dark mode support for boutique-specific elements -->
+    <style>
+        [data-theme="dark"] .boutique-hero .hero-title-main,
+        [data-theme="dark"] .boutique-hero .hero-italic,
+        [data-theme="dark"] .boutique-hero .hero-desc-main {
+            color: var(--text-primary) !important;
+        }
+        [data-theme="dark"] .boutique-hero .hero-italic {
+            color: var(--accent) !important;
+        }
+        [data-theme="dark"] .product-card-mock {
+            background-color: var(--bg-surface) !important;
+            border-color: var(--border-color) !important;
+        }
+        [data-theme="dark"] .prod-details h3,
+        [data-theme="dark"] .prod-price {
+            color: var(--text-primary) !important;
+        }
+        [data-theme="dark"] .prod-sub,
+        [data-theme="dark"] .prod-reviews-count {
+            color: var(--text-muted) !important;
+        }
+        [data-theme="dark"] .shop-sidebar {
+            background-color: var(--bg-surface) !important;
+            border-color: var(--border-color) !important;
+        }
+        [data-theme="dark"] .sidebar-title,
+        [data-theme="dark"] .sidebar-filter-btn {
+            color: var(--text-secondary) !important;
+        }
+        [data-theme="dark"] .sidebar-filter-btn:hover,
+        [data-theme="dark"] .sidebar-filter-btn.active {
+            color: #fff !important;
+        }
+        [data-theme="dark"] .search-bar {
+            background: var(--bg-surface) !important;
+            color: var(--text-primary) !important;
+            border-color: var(--border-color) !important;
+        }
+        [data-theme="dark"] .prod-heart-btn {
+            background-color: var(--bg-surface) !important;
+            color: var(--text-secondary) !important;
+        }
+        [data-theme="dark"] .newsletter-banner-overlay {
+            background: rgba(18,18,18,0.92) !important;
+        }
+        [data-theme="dark"] .news-title,
+        [data-theme="dark"] .news-subtitle {
+            color: var(--text-primary) !important;
+        }
+        [data-theme="dark"] .footer {
+            background-color: var(--bg-surface) !important;
+        }
+        [data-theme="dark"] .footer-logo-text,
+        [data-theme="dark"] .footer-heading,
+        [data-theme="dark"] .footer-desc,
+        [data-theme="dark"] .info-badge-item {
+            color: var(--text-primary) !important;
+        }
+        [data-theme="dark"] .footer-links a {
+            color: var(--text-secondary) !important;
+        }
+        [data-theme="dark"] .footer-socials a {
+            background: var(--bg-main) !important;
+            color: var(--text-primary) !important;
+        }
+        [data-theme="dark"] .promo-bar {
+            background-color: var(--bg-surface) !important;
+        }
+        [data-theme="dark"] .navbar {
+            background: rgba(18,18,18,0.9) !important;
+        }
+        [data-theme="dark"] .nav-link,
+        [data-theme="dark"] .icon-btn,
+        [data-theme="dark"] .cart-btn {
+            color: var(--text-primary) !important;
+        }
+        [data-theme="dark"] .hero-desc-main {
+            color: var(--text-secondary) !important;
+        }
+        [data-theme="dark"] .prod-img-wrapper {
+            background-color: var(--bg-main) !important;
+        }
+    </style>
+
     <!-- Main scripts -->
     <script src="js/script.js"></script>
 </body>
 
 </html>
+
