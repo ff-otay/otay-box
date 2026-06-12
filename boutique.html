@@ -75,6 +75,11 @@
             <a href="box-detail.html" class="mobile-link">Nos Box</a>
             <a href="boutique.html" class="mobile-link active">Boutique</a>
             <a href="index.html#contact" class="mobile-link">Contact</a>
+            <button class="mobile-link theme-toggle" style="display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; border: none; font-family: inherit; font-size: inherit; font-weight: inherit; color: inherit; cursor: pointer;">
+                <span>Thème</span>
+                <i class="fa-solid fa-sun light-icon"></i>
+                <i class="fa-solid fa-moon dark-icon"></i>
+            </button>
         </div>
     </header>
 
@@ -452,6 +457,8 @@
         }
         .product-card-mock {
             width: 100%;
+            max-width: 320px;
+            margin: 0 auto;
             background-color: #FFFFFF;
             border-radius: 12px;
             overflow: hidden;
@@ -877,6 +884,9 @@
                 height: 480px;
                 background-image: linear-gradient(to bottom, rgba(250, 248, 245, 0.95) 40%, rgba(250, 248, 245, 0.8) 100%), url('assets/yukon-haughton-Fkt0y2UZg88-unsplash.jpg');
             }
+            .boutique-hero-slide {
+                background-position: center !important;
+            }
             .props-container-grid {
                 grid-template-columns: repeat(3, 1fr);
                 gap: 2rem;
@@ -1057,9 +1067,14 @@
                     return;
                 }
 
+                const likedProducts = JSON.parse(localStorage.getItem('otayLiked') || '[]');
                 filtered.forEach(p => {
                     const card = document.createElement('div');
                     card.className = 'product-card-mock';
+                    
+                    const isLiked = likedProducts.includes(p.title);
+                    const heartClass = isLiked ? 'fa-solid fa-heart' : 'fa-regular fa-heart';
+                    const heartColor = isLiked ? 'style="color: #E2725B;"' : '';
                     
                     let starsHTML = '';
                     for (let i = 0; i < p.stars; i++) starsHTML += '<i class="fa-solid fa-star"></i>';
@@ -1067,7 +1082,7 @@
                     card.innerHTML = `
                         <div class="prod-img-wrapper">
                             <img src="${p.img}" alt="${p.title}" />
-                            <button class="prod-heart-btn" aria-label="Ajouter aux favoris"><i class="fa-regular fa-heart"></i></button>
+                            <button class="prod-heart-btn" aria-label="Ajouter aux favoris" ${heartColor}><i class="${heartClass}"></i></button>
                             <button class="prod-cart-btn-overlay add-to-cart-btn" aria-label="Ajouter au panier"><i class="fa-solid fa-plus"></i></button>
                         </div>
                         <div class="prod-details">
@@ -1079,8 +1094,8 @@
                     `;
                     // Make the whole card clickable to product detail
                     card.addEventListener('click', (e) => {
-                        // Prevent click when add-to-cart button is clicked
-                        if (e.target.closest('.add-to-cart-btn')) return;
+                        // Prevent click when add-to-cart or heart button is clicked
+                        if (e.target.closest('.add-to-cart-btn') || e.target.closest('.prod-heart-btn')) return;
                         window.location.href = `product.html?id=${p.id}`;
                     });
                     productsGrid.appendChild(card);
@@ -1207,8 +1222,15 @@
             // Dark-mode aware gradient — reads theme at slide time
             function getBgGradient() {
                 const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+                const isMobile = window.innerWidth <= 992;
                 if (isDark) {
+                    if (isMobile) {
+                        return 'linear-gradient(to bottom, rgba(18,18,18,0.92) 0%, rgba(18,18,18,0.8) 50%, rgba(18,18,18,0.5) 100%)';
+                    }
                     return 'linear-gradient(to right, rgba(18,18,18,0.98) 35%, rgba(18,18,18,0.75) 60%, rgba(18,18,18,0.15) 100%)';
+                }
+                if (isMobile) {
+                    return 'linear-gradient(to bottom, rgba(250,248,245,0.92) 0%, rgba(250,248,245,0.8) 50%, rgba(250,248,245,0.5) 100%)';
                 }
                 return 'linear-gradient(to right, rgba(250,248,245,0.98) 35%, rgba(250,248,245,0.75) 60%, rgba(250,248,245,0.15) 100%)';
             }

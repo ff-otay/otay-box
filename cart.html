@@ -236,6 +236,11 @@
             <a href="box-detail.html" class="mobile-link">Nos Box</a>
             <a href="boutique.html" class="mobile-link">Boutique</a>
             <a href="index.html#contact" class="mobile-link">Contact</a>
+            <button class="mobile-link theme-toggle" style="display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; border: none; font-family: inherit; font-size: inherit; font-weight: inherit; color: inherit; cursor: pointer;">
+                <span>Thème</span>
+                <i class="fa-solid fa-sun light-icon"></i>
+                <i class="fa-solid fa-moon dark-icon"></i>
+            </button>
         </div>
     </header>
 
@@ -369,7 +374,8 @@
                 // Bind actions
                 document.querySelectorAll('.dec-btn').forEach(btn => {
                     btn.addEventListener('click', function() {
-                        const id = parseInt(this.getAttribute('data-id'));
+                        const rawId = this.getAttribute('data-id');
+                        const id = isNaN(rawId) ? rawId : parseInt(rawId);
                         const product = items.find(p => p.id === id);
                         if (product && product.qty > 1) {
                             window.otayCart.add({ id }, -1); // reduce by 1
@@ -380,7 +386,8 @@
                 
                 document.querySelectorAll('.inc-btn').forEach(btn => {
                     btn.addEventListener('click', function() {
-                        const id = parseInt(this.getAttribute('data-id'));
+                        const rawId = this.getAttribute('data-id');
+                        const id = isNaN(rawId) ? rawId : parseInt(rawId);
                         window.otayCart.add({ id }, 1); // inc by 1
                         renderCartPage();
                     });
@@ -388,7 +395,8 @@
                 
                 document.querySelectorAll('.cart-remove-btn').forEach(btn => {
                     btn.addEventListener('click', function() {
-                        const id = parseInt(this.getAttribute('data-id'));
+                        const rawId = this.getAttribute('data-id');
+                        const id = isNaN(rawId) ? rawId : parseInt(rawId);
                         window.otayCart.remove(id);
                         renderCartPage();
                     });

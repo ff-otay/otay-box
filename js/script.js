@@ -114,18 +114,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- Theme Toggle Setup ---
-    const themeBtn = document.querySelector('.theme-toggle');
+    const themeBtns = document.querySelectorAll('.theme-toggle');
     const htmlElement = document.documentElement;
 
-    // Theme already applied by IIFE above; just wire the button
-    if (themeBtn) {
-        themeBtn.addEventListener('click', () => {
+    themeBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
             const currentTheme = htmlElement.getAttribute('data-theme');
             const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
             htmlElement.setAttribute('data-theme', newTheme);
             localStorage.setItem('otay-theme', newTheme);
         });
-    }
+    });
 
     // Remove old inline onclick handlers
     document.querySelectorAll('.search-btn, .profile-btn, .cart-btn').forEach(btn => {
