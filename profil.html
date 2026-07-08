@@ -203,59 +203,29 @@
             <a href="boutique.html" class="mobile-link">Boutique</a>
             <a href="index.html#contact" class="mobile-link">Contact</a>
         </div>
-    </header>
-
-    <main class="profile-page-main">
+    </    <main class="profile-page-main">
         <div class="container">
             <div class="profile-header">
                 <div class="profile-avatar">
                     <i class="fa-regular fa-user"></i>
                 </div>
                 <h1 class="profile-greeting">Bonjour, Yasmine</h1>
-                <p class="profile-email">yasmine.exemple@gmail.com</p>
+                <p class="profile-email">yasmine.soltani@gmail.com</p>
             </div>
             
             <div class="profile-grid">
                 <aside class="profile-nav">
                     <ul class="profile-nav-list">
-                        <li><a href="#" class="profile-nav-link active"><i class="fa-solid fa-box"></i> Mes commandes</a></li>
-                        <li><a href="#" class="profile-nav-link"><i class="fa-regular fa-heart"></i> Mes favoris</a></li>
-                        <li><a href="#" class="profile-nav-link"><i class="fa-regular fa-address-card"></i> Mes informations</a></li>
-                        <li><a href="#" class="profile-nav-link"><i class="fa-solid fa-location-dot"></i> Mes adresses</a></li>
+                        <li><a href="#" class="profile-nav-link" data-section="orders"><i class="fa-solid fa-box"></i> Mes commandes</a></li>
+                        <li><a href="#" class="profile-nav-link" data-section="favorites"><i class="fa-regular fa-heart"></i> Mes favoris</a></li>
+                        <li><a href="#" class="profile-nav-link" data-section="info"><i class="fa-regular fa-address-card"></i> Mes informations</a></li>
+                        <li><a href="#" class="profile-nav-link" data-section="addresses"><i class="fa-solid fa-location-dot"></i> Mes adresses</a></li>
                         <li><a href="index.html" class="profile-nav-link logout-btn"><i class="fa-solid fa-arrow-right-from-bracket"></i> Déconnexion</a></li>
                     </ul>
                 </aside>
                 
-                <div class="profile-content">
-                    <h2 class="content-title">Mes dernières commandes</h2>
-                    
-                    <div class="order-card">
-                        <div class="order-info">
-                            <h4>Commande #10429</h4>
-                            <div class="order-meta">
-                                <span><i class="fa-regular fa-calendar"></i> 12 Mai 2026</span>
-                                <span><i class="fa-solid fa-cube"></i> Box "Jardin de Douceur" + 2 articles</span>
-                            </div>
-                        </div>
-                        <div style="text-align: right;">
-                            <div class="order-status status-delivered mb-2" style="margin-bottom: 10px; display: inline-block;">Livrée</div>
-                            <div style="font-weight: 600; color: #2F2A25;">75,80 TND</div>
-                        </div>
-                    </div>
-                    
-                    <div class="order-card">
-                        <div class="order-info">
-                            <h4>Commande #10385</h4>
-                            <div class="order-meta">
-                                <span><i class="fa-regular fa-calendar"></i> 10 Avril 2026</span>
-                                <span><i class="fa-solid fa-cube"></i> Box "Éveil Printanier"</span>
-                            </div>
-                        </div>
-                        <div style="text-align: right;">
-                            <div class="order-status status-delivered mb-2" style="margin-bottom: 10px; display: inline-block;">Livrée</div>
-                            <div style="font-weight: 600; color: #2F2A25;">45,00 TND</div>
-                        </div>
-                    </div>
+                <div class="profile-content" id="profile-content">
+                    <!-- Content loaded by JS -->
                 </div>
             </div>
         </div>
@@ -264,7 +234,6 @@
     <footer class="footer">
         <div class="container">
             <div class="footer-grid">
-                <!-- Same footer content as index -->
                 <div class="footer-brand">
                     <h3 class="footer-logo">ÔTAY BOX</h3>
                     <p class="footer-desc">Une parenthèse de douceur livrée chez vous chaque mois. Cultivez votre bien-être, une tasse de thé à la fois.</p>
@@ -282,7 +251,7 @@
                     <h4>Assistance</h4>
                     <ul>
                         <li><a href="#">FAQ</a></li>
-                        <li><a href="#">Livraison & Retours</a></li>
+                        <li><a href="#">Livraison &amp; Retours</a></li>
                         <li><a href="#">Nous contacter</a></li>
                         <li><a href="#">Mentions légales</a></li>
                     </ul>
@@ -290,11 +259,193 @@
             </div>
             <div class="footer-bottom">
                 <p>&copy; <span id="current-year"></span> ÔTAY BOX. Tous droits réservés.</p>
+                <div class="footer-actions">
+                    <div class="footer-socials">
+                        <a href="https://www.instagram.com/otaybox/" target="_blank" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="https://www.tiktok.com/@otaybox" target="_blank" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+                        <a href="https://www.facebook.com/OTAYBOX/" target="_blank" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+                    </div>
+                </div>
             </div>
         </div>
     </footer>
 
     <!-- Scripts -->
     <script src="js/script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const contentArea = document.getElementById('profile-content');
+            const navLinks = document.querySelectorAll('.profile-nav-link[data-section]');
+            
+            function showSection(section) {
+                navLinks.forEach(l => l.classList.remove('active'));
+                const activeLink = document.querySelector(`.profile-nav-link[data-section="${section}"]`);
+                if (activeLink) activeLink.classList.add('active');
+                
+                if (section === 'orders') {
+                    renderOrders();
+                } else if (section === 'favorites') {
+                    renderFavorites();
+                } else if (section === 'info') {
+                    renderInfo();
+                } else if (section === 'addresses') {
+                    renderAddresses();
+                }
+            }
+            
+            function renderOrders() {
+                contentArea.innerHTML = `
+                    <h2 class="content-title">Mes dernières commandes</h2>
+                    <div class="order-card">
+                        <div class="order-info">
+                            <h4>Commande #10429</h4>
+                            <div class="order-meta">
+                                <span><i class="fa-regular fa-calendar"></i> 12 Mai 2026</span>
+                                <span><i class="fa-solid fa-cube"></i> Box "Jardin de Douceur" + 2 articles</span>
+                            </div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div class="order-status status-delivered mb-2" style="margin-bottom: 10px; display: inline-block;">Livrée</div>
+                            <div style="font-weight: 600; color: #2F2A25;">75,80 TND</div>
+                        </div>
+                    </div>
+                    <div class="order-card">
+                        <div class="order-info">
+                            <h4>Commande #10385</h4>
+                            <div class="order-meta">
+                                <span><i class="fa-regular fa-calendar"></i> 10 Avril 2026</span>
+                                <span><i class="fa-solid fa-cube"></i> Box "Éveil Printanier"</span>
+                            </div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div class="order-status status-delivered mb-2" style="margin-bottom: 10px; display: inline-block;">Livrée</div>
+                            <div style="font-weight: 600; color: #2F2A25;">45,00 TND</div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            function renderFavorites() {
+                const liked = JSON.parse(localStorage.getItem('otayLiked') || '[]');
+                
+                if (liked.length === 0) {
+                    contentArea.innerHTML = `
+                        <h2 class="content-title">Mes favoris</h2>
+                        <div style="text-align: center; padding: 3rem 0; color: #8C857E;">
+                            <i class="fa-regular fa-heart" style="font-size: 3rem; color: #E5E0D8; margin-bottom: 1rem; display: block;"></i>
+                            <p>Vous n'avez aucun favori pour le moment.</p>
+                            <a href="boutique.html" class="btn btn-outline" style="margin-top: 1.5rem; display: inline-block;">Découvrir la boutique</a>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                let favHTML = '<h2 class="content-title">Mes favoris</h2>';
+                favHTML += '<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">';
+                
+                liked.forEach(name => {
+                    // Try to find the product in productsData
+                    const product = (typeof productsData !== 'undefined') ? productsData.find(p => p.title === name) : null;
+                    const img = product ? product.img : 'assets/hero-image.webp';
+                    const price = product ? product.price : '';
+                    
+                    favHTML += `
+                        <div style="background: #FAF8F5; border-radius: 12px; overflow: hidden; border: 1px solid rgba(47,42,37,0.05);">
+                            <img src="${img}" alt="${name}" style="width: 100%; height: 150px; object-fit: cover;">
+                            <div style="padding: 1rem;">
+                                <h4 style="font-size: 0.9rem; color: #2F2A25; margin-bottom: 0.3rem;">${name}</h4>
+                                ${price ? `<p style="color: #5B705F; font-weight: 600;">${price}</p>` : ''}
+                                <button class="remove-fav-btn" data-name="${name}" style="background: none; border: none; color: #E74C3C; font-size: 0.8rem; cursor: pointer; margin-top: 0.5rem;"><i class="fa-solid fa-trash-can"></i> Retirer</button>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                favHTML += '</div>';
+                favHTML += `<button id="fav-whatsapp-btn" style="background-color: #25D366; color: #fff; border: none; border-radius: 50px; padding: 0.8rem 2rem; font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 0.95rem; cursor: pointer; transition: all 0.3s; display: inline-flex; align-items: center; gap: 8px;">
+                    <i class="fa-brands fa-whatsapp" style="font-size: 1.2rem;"></i> Envoyer mes favoris via WhatsApp
+                </button>`;
+                
+                contentArea.innerHTML = favHTML;
+                
+                // Bind remove buttons
+                document.querySelectorAll('.remove-fav-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const name = btn.getAttribute('data-name');
+                        const likedArr = JSON.parse(localStorage.getItem('otayLiked') || '[]');
+                        const idx = likedArr.indexOf(name);
+                        if (idx > -1) {
+                            likedArr.splice(idx, 1);
+                            localStorage.setItem('otayLiked', JSON.stringify(likedArr));
+                        }
+                        renderFavorites();
+                    });
+                });
+                
+                // Bind WhatsApp share
+                const favWaBtn = document.getElementById('fav-whatsapp-btn');
+                if (favWaBtn) {
+                    favWaBtn.addEventListener('click', () => {
+                        const currentLiked = JSON.parse(localStorage.getItem('otayLiked') || '[]');
+                        if (currentLiked.length === 0) {
+                            alert('Vous n\'avez aucun favori pour le moment !');
+                            return;
+                        }
+                        let favMsg = 'Bonjour 🌿 Voici mes produits favoris ÔTAY BOX :\n\n';
+                        currentLiked.forEach(item => {
+                            favMsg += `❤️ ${item}\n`;
+                        });
+                        favMsg += '\nJe souhaite en savoir plus sur ces produits ! 🙏';
+                        window.open('https://wa.me/21654050380?text=' + encodeURIComponent(favMsg), '_blank');
+                    });
+                }
+            }
+            
+            function renderInfo() {
+                contentArea.innerHTML = `
+                    <h2 class="content-title">Mes informations</h2>
+                    <form id="info-form" style="max-width: 500px;">
+                        <div style="margin-bottom: 1.5rem;">
+                            <label style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: #2F2A25;">Nom complet</label>
+                            <input type="text" value="Yasmine Soltani" style="width: 100%; padding: 0.8rem 1rem; border: 1px solid rgba(47,42,37,0.15); border-radius: 8px; font-size: 0.95rem;">
+                        </div>
+                        <div style="margin-bottom: 1.5rem;">
+                            <label style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: #2F2A25;">Email</label>
+                            <input type="email" value="yasmine.soltani@gmail.com" style="width: 100%; padding: 0.8rem 1rem; border: 1px solid rgba(47,42,37,0.15); border-radius: 8px; font-size: 0.95rem;">
+                        </div>
+                        <div style="margin-bottom: 1.5rem;">
+                            <label style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: #2F2A25;">Téléphone</label>
+                            <input type="tel" value="+216 54 050 380" style="width: 100%; padding: 0.8rem 1rem; border: 1px solid rgba(47,42,37,0.15); border-radius: 8px; font-size: 0.95rem;">
+                        </div>
+                        <button type="button" onclick="alert('Informations sauvegardées !')" style="background-color: #5B705F; color: #fff; border: none; border-radius: 50px; padding: 0.8rem 2rem; font-weight: 600; cursor: pointer;">Sauvegarder</button>
+                    </form>
+                `;
+            }
+            
+            function renderAddresses() {
+                contentArea.innerHTML = `
+                    <h2 class="content-title">Mes adresses</h2>
+                    <div class="order-card" style="flex-direction: column; align-items: flex-start;">
+                        <div style="display: flex; justify-content: space-between; width: 100%; align-items: center;">
+                            <h4 style="margin: 0; color: #2F2A25;">Adresse principale</h4>
+                            <span class="order-status status-delivered">Par défaut</span>
+                        </div>
+                        <p style="color: #615B55; margin-top: 0.8rem;">Yasmine Soltani<br>Rue de la Liberté, Apt 12<br>La Marsa, 2078<br>Tunisie</p>
+                    </div>
+                `;
+            }
+            
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const section = link.getAttribute('data-section');
+                    showSection(section);
+                });
+            });
+            
+            // Show orders by default
+            showSection('orders');
+        });
+    </script>"js/script.js"></script>
 </body>
 </html>

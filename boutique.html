@@ -86,9 +86,9 @@
     <main class="main-content">
         <!-- Hero Section (Full width background image with text overlay) -->
         <section class="boutique-hero" id="boutique-hero-slider">
-            <div class="boutique-hero-slide active" style="background-image: linear-gradient(to right, rgba(250, 248, 245, 0.98) 35%, rgba(250, 248, 245, 0.75) 60%, rgba(250, 248, 245, 0.15) 100%), url('assets/yukon-haughton-Fkt0y2UZg88-unsplash.jpg');"></div>
-            <div class="boutique-hero-slide" style="background-image: linear-gradient(to right, rgba(250, 248, 245, 0.98) 35%, rgba(250, 248, 245, 0.75) 60%, rgba(250, 248, 245, 0.15) 100%), url('assets/herbal_infusions_tea_1779202539010.png');"></div>
-            <div class="boutique-hero-slide" style="background-image: linear-gradient(to right, rgba(250, 248, 245, 0.98) 35%, rgba(250, 248, 245, 0.75) 60%, rgba(250, 248, 245, 0.15) 100%), url('assets/Contenu de box.png');"></div>
+            <div class="boutique-hero-slide active" style="background-image: linear-gradient(to right, rgba(250, 248, 245, 0.98) 35%, rgba(250, 248, 245, 0.75) 60%, rgba(250, 248, 245, 0.15) 100%), url('assets/yukon-haughton-Fkt0y2UZg88-unsplash.webp');"></div>
+            <div class="boutique-hero-slide" style="background-image: linear-gradient(to right, rgba(250, 248, 245, 0.98) 35%, rgba(250, 248, 245, 0.75) 60%, rgba(250, 248, 245, 0.15) 100%), url('assets/herbal_infusions_tea_1779202539010.webp');"></div>
+            <div class="boutique-hero-slide" style="background-image: linear-gradient(to right, rgba(250, 248, 245, 0.98) 35%, rgba(250, 248, 245, 0.75) 60%, rgba(250, 248, 245, 0.15) 100%), url('assets/hero-image.webp');"></div>
             <div class="container hero-container-overlay" style="position: relative; z-index:2;">
                 <div class="hero-text-block">
                     <h1 class="hero-title-main">
@@ -171,9 +171,9 @@
                 <h3 class="footer-logo-text">ÔTAY BOX</h3>
                 <p class="footer-desc">Des rituels bien-être naturels et inspirants pour prendre soin de vous, au quotidien.</p>
                 <div class="footer-socials">
-                    <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-                    <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
-                    <a href="#" aria-label="Pinterest"><i class="fa-brands fa-pinterest"></i></a>
+                    <a href="https://www.instagram.com/otaybox/" target="_blank" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="https://www.facebook.com/OTAYBOX/" target="_blank" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="https://www.tiktok.com/@otaybox" target="_blank" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
                 </div>
             </div>
 
@@ -666,20 +666,22 @@
         .sidebar-filter-btn {
             width: 100%;
             text-align: left;
-            background: none;
-            border: none;
+            background: #FAF8F5;
+            border: 1px solid rgba(47, 42, 37, 0.08);
+            border-radius: 25px;
             font-family: 'Poppins', sans-serif;
             font-size: 0.85rem;
             font-weight: 500;
             color: #615B55;
-            padding: 0.5rem 0;
+            padding: 0.6rem 1.2rem;
             cursor: pointer;
-            transition: color 0.3s, padding-left 0.3s;
+            transition: all 0.3s;
         }
         .sidebar-filter-btn:hover, .sidebar-filter-btn.active {
-            color: #5B705F;
+            color: #FFFFFF;
+            background-color: #5B705F;
             font-weight: 600;
-            padding-left: 5px;
+            border-color: #5B705F;
         }
         .sidebar-filter-btn.active::before {
             content: '•';
@@ -1018,6 +1020,9 @@
         }
     </style>
 
+    <!-- Main scripts -->
+    <script src="js/script.js"></script>
+    
     <!-- Interactive Filtering Scripts -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -1236,9 +1241,9 @@
             }
 
             const slideImages = [
-                "assets/yukon-haughton-Fkt0y2UZg88-unsplash.jpg",
-                "assets/herbal_infusions_tea_1779202539010.png",
-                "assets/Contenu de box.png"
+                "assets/yukon-haughton-Fkt0y2UZg88-unsplash.webp",
+                "assets/herbal_infusions_tea_1779202539010.webp",
+                "assets/hero-image.webp"
             ];
 
             function goToSlide(index) {
@@ -1364,8 +1369,6 @@
         }
     </style>
 
-    <!-- Main scripts -->
-    <script src="js/script.js"></script>
 </body>
 
 </html>

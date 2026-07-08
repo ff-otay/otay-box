@@ -11,13 +11,13 @@
 
 // Global Product Data
 const productsData = [
-    { id: 1, title: "Infusion Douce Nuit", category: "infusions", sub: "Tisane artisanale", price: "12,90 TND", stars: 5, reviews: 56, img: "assets/Sachets d'infusion ÔTAY.png" },
-    { id: 2, title: "Mug en céramique « Pause douceur »", category: "accessoires", sub: "Accessoire artisanal", price: "18,90 TND", stars: 5, reviews: 23, img: "assets/Mug Rose Poudré ÔTAY.png" },
+    { id: 1, title: "Infusion Douce Nuit", category: "infusions", sub: "Tisane artisanale", price: "12,90 TND", stars: 5, reviews: 56, img: "assets/produit.webp" },
+    { id: 2, title: "Mug en céramique « Pause douceur »", category: "accessoires", sub: "Accessoire artisanal", price: "18,90 TND", stars: 5, reviews: 23, img: "assets/produit1.webp" },
     { id: 4, title: "Bougie Fleur de coton", category: "bougies", sub: "Senteur naturelle", price: "16,90 TND", stars: 5, reviews: 17, img: "assets/tea_accessory_mug_1779202706641.png" },
-    { id: 5, title: "Savon surgras naturel Amande douce", category: "savons", sub: "Soin bio", price: "7,90 TND", stars: 5, reviews: 31, img: "assets/sweet_treat_honey_1779202724881.png" },
-    { id: 6, title: "Infusette Cuillère Cœur", category: "accessoires", sub: "Accessoire en inox", price: "9,90 TND", stars: 5, reviews: 15, img: "assets/Infusette.png" },
-    { id: 8, title: "Coffret Fleuriste Rosé", category: "infusions", sub: "Premium Herbal Infusion", price: "24,90 TND", stars: 5, reviews: 12, img: "assets/tea_sachets_1779202622262.png" },
-    { id: 9, title: "Miel Artisanal Raw & Bio", category: "savons", sub: "Douceur bien-être", price: "14,50 TND", stars: 5, reviews: 29, img: "assets/sweet_treat_honey_1779202724881.png" },
+    { id: 5, title: "Savon surgras naturel Amande douce", category: "savons", sub: "Soin bio", price: "7,90 TND", stars: 5, reviews: 31, img: "assets/sweet_treat_honey_1779202724881.webp" },
+    { id: 6, title: "Infusette Cuillère Cœur", category: "accessoires", sub: "Accessoire en inox", price: "9,90 TND", stars: 5, reviews: 15, img: "assets/Infusette.webp" },
+    { id: 8, title: "Coffret Fleuriste Rosé", category: "infusions", sub: "Premium Herbal Infusion", price: "24,90 TND", stars: 5, reviews: 12, img: "assets/produit2.webp" },
+    { id: 9, title: "Miel Artisanal Raw & Bio", category: "savons", sub: "Douceur bien-être", price: "14,50 TND", stars: 5, reviews: 29, img: "assets/produit3.webp" },
     { id: 10, title: "Guide Rituel Bien-être", category: "lifestyle", sub: "Inspiration & Conseils", price: "5,00 TND", stars: 5, reviews: 9, img: "assets/wellness_card_art_1779202974836.png" }
 ];
 
@@ -96,6 +96,15 @@ window.otayCart = {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
+    // --- Global Floating WhatsApp Button ---
+    const waBtn = document.createElement('a');
+    waBtn.href = "https://wa.me/21654050380?text=" + encodeURIComponent("Bonjour 🌿 Je souhaite commander une ÔTAY BOX !");
+    waBtn.target = "_blank";
+    waBtn.className = "global-wa-btn";
+    waBtn.setAttribute('aria-label', 'Commander via WhatsApp');
+    waBtn.innerHTML = '<i class="fa-brands fa-whatsapp"></i>';
+    document.body.appendChild(waBtn);
+
     window.otayCart.updateUI();
 
     // --- Lazy Image Fade-In ---
@@ -199,6 +208,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const navbar = document.querySelector('.navbar');
 
     window.addEventListener('scroll', () => {
+        if (!navbar) return;
         if (window.scrollY > 50) {
             navbar.classList.add('scrolled');
         } else {
@@ -210,25 +220,31 @@ document.addEventListener('DOMContentLoaded', () => {
     const menuBtn = document.querySelector('.mobile-menu-toggle');
     const mobileMenu = document.querySelector('.mobile-menu');
     const mobileLinks = document.querySelectorAll('.mobile-link');
-    const menuIcon = menuBtn.querySelector('i');
+    const menuIcon = menuBtn ? menuBtn.querySelector('i') : null;
 
     function closeMobileMenu() {
-        mobileMenu.classList.remove('active');
-        menuIcon.classList.remove('fa-xmark');
-        menuIcon.classList.add('fa-bars');
-    }
-
-    menuBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        mobileMenu.classList.toggle('active');
-        if (mobileMenu.classList.contains('active')) {
-            menuIcon.classList.remove('fa-bars');
-            menuIcon.classList.add('fa-xmark');
-        } else {
+        if (mobileMenu) mobileMenu.classList.remove('active');
+        if (menuIcon) {
             menuIcon.classList.remove('fa-xmark');
             menuIcon.classList.add('fa-bars');
         }
-    });
+    }
+
+    if (menuBtn) {
+        menuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (mobileMenu) mobileMenu.classList.toggle('active');
+            if (menuIcon && mobileMenu) {
+                if (mobileMenu.classList.contains('active')) {
+                    menuIcon.classList.remove('fa-bars');
+                    menuIcon.classList.add('fa-xmark');
+                } else {
+                    menuIcon.classList.remove('fa-xmark');
+                    menuIcon.classList.add('fa-bars');
+                }
+            }
+        });
+    }
 
     // Close menu when clicking outside
     document.addEventListener('click', (e) => {
@@ -357,14 +373,7 @@ document.addEventListener('DOMContentLoaded', () => {
         scrollObserver.observe(el);
     });
 
-    // --- Global Floating WhatsApp Button ---
-    const waBtn = document.createElement('a');
-    waBtn.href = "https://wa.me/21654050380?text=" + encodeURIComponent("Bonjour 🌿 Je souhaite commander une ÔTAY BOX !");
-    waBtn.target = "_blank";
-    waBtn.className = "global-wa-btn";
-    waBtn.setAttribute('aria-label', 'Commander via WhatsApp');
-    waBtn.innerHTML = '<i class="fa-brands fa-whatsapp"></i>';
-    document.body.appendChild(waBtn);
+    // Global WhatsApp Button removed from here (moved to top of DOMContentLoaded)
 
     // Keep individual product WhatsApp buttons working if they exist
     const productWhatsappBtn = document.querySelector('.btn-whatsapp');
@@ -373,6 +382,60 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             const title = document.getElementById('product-title')?.textContent || 'Produit ÔTAY';
             window.open(`https://wa.me/21654050380?text=` + encodeURIComponent(`Bonjour 🌿 Je souhaite commander : ${title}`));
+        });
+    }
+
+    // --- Contact Form → WhatsApp ---
+    const contactForm = document.getElementById('contact-form');
+    if (contactForm) {
+        contactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('name')?.value || '';
+            const email = document.getElementById('email')?.value || '';
+            const message = document.getElementById('message')?.value || '';
+            const waMessage = `Bonjour 🌿 ÔTAY BOX – Nouveau message de contact\n\n👤 Nom: ${name}\n📧 Email: ${email}\n💬 Message: ${message}`;
+            window.open('https://wa.me/21654050380?text=' + encodeURIComponent(waMessage), '_blank');
+            contactForm.reset();
+        });
+    }
+
+    // --- Cart Checkout → WhatsApp ---
+    const checkoutWhatsappBtn = document.getElementById('checkout-whatsapp-btn');
+    if (checkoutWhatsappBtn) {
+        checkoutWhatsappBtn.addEventListener('click', () => {
+            const items = window.otayCart.items;
+            if (items.length === 0) {
+                alert('Votre panier est vide !');
+                return;
+            }
+            let orderMsg = 'Bonjour 🌿 Je souhaite passer commande :\n\n';
+            let total = 0;
+            items.forEach(item => {
+                const priceVal = parseFloat(item.price.replace(',', '.').replace(/[^\d.-]/g, ''));
+                total += priceVal * item.qty;
+                orderMsg += `📦 ${item.title} x${item.qty} — ${item.price}\n`;
+            });
+            orderMsg += `\n💰 Total: ${total.toFixed(2).replace('.', ',')} TND`;
+            orderMsg += `\n\nMerci de me confirmer la disponibilité et les modalités de livraison ! 🙏`;
+            window.open('https://wa.me/21654050380?text=' + encodeURIComponent(orderMsg), '_blank');
+        });
+    }
+
+    // --- Favorites WhatsApp Share ---
+    const favWhatsappBtn = document.getElementById('fav-whatsapp-btn');
+    if (favWhatsappBtn) {
+        favWhatsappBtn.addEventListener('click', () => {
+            const liked = JSON.parse(localStorage.getItem('otayLiked') || '[]');
+            if (liked.length === 0) {
+                alert('Vous n\'avez aucun favori pour le moment !');
+                return;
+            }
+            let favMsg = 'Bonjour 🌿 Voici mes produits favoris ÔTAY BOX :\n\n';
+            liked.forEach(item => {
+                favMsg += `❤️ ${item}\n`;
+            });
+            favMsg += `\nJe souhaite en savoir plus sur ces produits ! 🙏`;
+            window.open('https://wa.me/21654050380?text=' + encodeURIComponent(favMsg), '_blank');
         });
     }
 
