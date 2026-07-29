@@ -324,7 +324,7 @@
     <!-- Navbar -->
     <header class="navbar fade-in">
         <div class="container nav-container">
-            <a href="#" class="logo">
+            <a href="index.html" class="logo">
                 <img src="assets/logo.png" alt="Logo ÔTAY BOX" class="logo-img">
             </a>
             
@@ -526,8 +526,8 @@
                                 <input type="text" class="qty-input" id="pd-qty" value="1" readonly>
                                 <button class="qty-btn" id="pd-plus">+</button>
                             </div>
-                            <button class="add-cart-large" id="pd-add-to-cart">
-                                <i class="fa-solid fa-cart-plus"></i> Ajouter au panier
+                            <button class="add-cart-large" id="pd-whatsapp-order" style="background-color: #25D366; color: white;">
+                                <i class="fa-brands fa-whatsapp"></i> Commander par WhatsApp
                             </button>
                         </div>
                         
@@ -551,22 +551,14 @@
                     qtyInput.value = parseInt(qtyInput.value) + 1;
                 });
                 
-                // Bind Add to Cart
-                const addBtn = document.getElementById('pd-add-to-cart');
-                addBtn.addEventListener('click', function(e) {
+                // Bind Order via WhatsApp
+                const orderBtn = document.getElementById('pd-whatsapp-order');
+                orderBtn.addEventListener('click', function(e) {
                     e.preventDefault();
                     const qty = parseInt(qtyInput.value);
-                    if (window.otayCart) {
-                        window.otayCart.add(product, qty);
+                    if (window.openWhatsAppOrderModal) {
+                        window.openWhatsAppOrderModal(product.title, qty);
                     }
-                    
-                    const orig = this.innerHTML;
-                    this.innerHTML = '<i class="fa-solid fa-check"></i> Ajouté avec succès !';
-                    this.style.backgroundColor = '#48594b';
-                    setTimeout(() => {
-                        this.innerHTML = orig;
-                        this.style.backgroundColor = '';
-                    }, 2000);
                 });
                 
                 // Render Related Products

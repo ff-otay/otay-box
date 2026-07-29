@@ -11,14 +11,10 @@
 
 // Global Product Data
 const productsData = [
-    { id: 1, title: "Infusion Douce Nuit", category: "infusions", sub: "Tisane artisanale", price: "12,90 TND", stars: 5, reviews: 56, img: "assets/produit.webp" },
-    { id: 2, title: "Mug en céramique « Pause douceur »", category: "accessoires", sub: "Accessoire artisanal", price: "18,90 TND", stars: 5, reviews: 23, img: "assets/produit1.webp" },
-    { id: 4, title: "Bougie Fleur de coton", category: "bougies", sub: "Senteur naturelle", price: "16,90 TND", stars: 5, reviews: 17, img: "assets/tea_accessory_mug_1779202706641.png" },
-    { id: 5, title: "Savon surgras naturel Amande douce", category: "savons", sub: "Soin bio", price: "7,90 TND", stars: 5, reviews: 31, img: "assets/sweet_treat_honey_1779202724881.webp" },
-    { id: 6, title: "Infusette Cuillère Cœur", category: "accessoires", sub: "Accessoire en inox", price: "9,90 TND", stars: 5, reviews: 15, img: "assets/Infusette.webp" },
-    { id: 8, title: "Coffret Fleuriste Rosé", category: "infusions", sub: "Premium Herbal Infusion", price: "24,90 TND", stars: 5, reviews: 12, img: "assets/produit2.webp" },
-    { id: 9, title: "Miel Artisanal Raw & Bio", category: "savons", sub: "Douceur bien-être", price: "14,50 TND", stars: 5, reviews: 29, img: "assets/produit3.webp" },
-    { id: 10, title: "Guide Rituel Bien-être", category: "lifestyle", sub: "Inspiration & Conseils", price: "5,00 TND", stars: 5, reviews: 9, img: "assets/wellness_card_art_1779202974836.png" }
+    { id: 1, title: "Box Jardin de douceur", category: "infusions", sub: "Tisane artisanale", price: "59,00 TND", stars: 5, reviews: 56, img: "assets/produit.webp" },
+    { id: 6, title: "Infusette cuillère cœur", category: "accessoires", sub: "Accessoire en inox", price: "20,00 TND", stars: 5, reviews: 15, img: "assets/Infusette.webp" },
+    { id: 9, title: "3 Tisanes collection Jardin de douceur", category: "infusions", sub: "Douceur bien-être", price: "24,00 TND", stars: 5, reviews: 29, img: "assets/produit3.webp" },
+    { id: 2, title: "Bubble Mug en céramique", category: "accessoires", sub: "Accessoire artisanal", price: "25,00 TND", stars: 5, reviews: 23, img: "assets/produit1.webp" }
 ];
 
 // Global Cart Management
@@ -439,27 +435,14 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- Add to Cart (Box Detail Page) ---
-    const addToCartBtn = document.querySelector('.add-to-cart-btn');
-    if (addToCartBtn) {
-        addToCartBtn.addEventListener('click', function() {
+    // --- Order via WhatsApp (Box Detail Page) ---
+    const boxOrderBtn = document.getElementById('box-whatsapp-order');
+    if (boxOrderBtn) {
+        boxOrderBtn.addEventListener('click', function() {
             const qty = parseInt(document.getElementById('qty')?.textContent || '1');
-            const boxProduct = {
-                id: 'box-jardin-douceur',
-                title: 'Box Jardin de Douceur',
-                price: '59 TND',
-                img: 'assets/box-jardin-douceur.png'
-            };
-            window.otayCart.add(boxProduct, qty);
-            const originalHTML = this.innerHTML;
-            this.innerHTML = '<i class="fa-solid fa-check"></i> Ajouté au panier !';
-            this.style.backgroundColor = '#4b6c4f';
-            this.style.color = '#fff';
-            setTimeout(() => {
-                this.innerHTML = originalHTML;
-                this.style.backgroundColor = '';
-                this.style.color = '';
-            }, 2500);
+            if (window.openWhatsAppOrderModal) {
+                window.openWhatsAppOrderModal('Box Jardin de Douceur', qty);
+            }
         });
     }
 
@@ -541,4 +524,109 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    // --- Inject Global WhatsApp Order Modal ---
+    const modalHTML = `
+    <div id="wa-order-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 10000; align-items: center; justify-content: center; font-family: 'Inter', sans-serif;">
+        <div style="background: #FAF8F5; width: 90%; max-width: 500px; padding: 2rem; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); position: relative; max-height: 90vh; overflow-y: auto;">
+            <button id="wa-modal-close" style="position: absolute; top: 15px; right: 20px; background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #2F2A25;">&times;</button>
+            
+            <div id="wa-form-container">
+                <h2 style="font-family: 'Playfair Display', serif; color: #2F2A25; margin-bottom: 0.5rem; text-align: center;">Finalisez votre commande</h2>
+                <p style="color: #615B55; font-size: 0.9rem; margin-bottom: 2rem; text-align: center;">Veuillez remplir vos coordonnées pour nous envoyer votre commande via WhatsApp.</p>
+                
+                <form id="wa-order-form">
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: 500; color: #2F2A25; font-size: 0.9rem;">Produit sélectionné</label>
+                        <input type="text" id="wa-product-name" readonly style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ddd; background: #eee; font-size: 0.9rem; color: #615B55;">
+                    </div>
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: 500; color: #2F2A25; font-size: 0.9rem;">Quantité</label>
+                        <input type="text" id="wa-product-qty" readonly style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ddd; background: #eee; font-size: 0.9rem; color: #615B55;">
+                    </div>
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: 500; color: #2F2A25; font-size: 0.9rem;">Nom et prénom <span style="color: #E2725B;">*</span></label>
+                        <input type="text" id="wa-client-name" required placeholder="Votre nom complet" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ccc; font-size: 0.9rem;">
+                    </div>
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: 500; color: #2F2A25; font-size: 0.9rem;">Numéro de téléphone <span style="color: #E2725B;">*</span></label>
+                        <input type="tel" id="wa-client-phone" required placeholder="Ex: 50 123 456" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ccc; font-size: 0.9rem;">
+                    </div>
+                    <div style="margin-bottom: 1.5rem;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: 500; color: #2F2A25; font-size: 0.9rem;">Adresse de livraison <span style="color: #E2725B;">*</span></label>
+                        <textarea id="wa-client-address" required placeholder="Votre adresse complète..." rows="3" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ccc; font-size: 0.9rem; resize: vertical;"></textarea>
+                    </div>
+                    <button type="submit" style="width: 100%; background: #25D366; color: #fff; padding: 12px; border: none; border-radius: 50px; font-size: 1rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: background 0.3s;">
+                        <i class="fa-brands fa-whatsapp"></i> Envoyer ma commande
+                    </button>
+                </form>
+            </div>
+            
+            <div id="wa-success-container" style="display: none; text-align: center; padding: 2rem 0;">
+                <div style="font-size: 4rem; color: #5B705F; margin-bottom: 1rem;"><i class="fa-solid fa-check-circle"></i></div>
+                <h3 style="font-family: 'Playfair Display', serif; color: #2F2A25; font-size: 1.5rem; margin-bottom: 1rem;">Votre demande de commande a bien été envoyée</h3>
+                <p style="color: #615B55; font-size: 0.95rem; line-height: 1.5; margin-bottom: 2rem;">Nous allons vous contacter prochainement pour confirmer votre commande et organiser la livraison.</p>
+                <button id="wa-back-btn" style="background: #5B705F; color: #fff; padding: 10px 24px; border: none; border-radius: 50px; font-weight: 500; cursor: pointer;">Retourner à la boutique</button>
+            </div>
+        </div>
+    </div>
+    `;
+    
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+    
+    const waModal = document.getElementById('wa-order-modal');
+    const waCloseBtn = document.getElementById('wa-modal-close');
+    const waFormContainer = document.getElementById('wa-form-container');
+    const waSuccessContainer = document.getElementById('wa-success-container');
+    const waForm = document.getElementById('wa-order-form');
+    const waBackBtn = document.getElementById('wa-back-btn');
+    
+    window.openWhatsAppOrderModal = function(productName, qty) {
+        document.getElementById('wa-product-name').value = productName;
+        document.getElementById('wa-product-qty').value = qty;
+        waFormContainer.style.display = 'block';
+        waSuccessContainer.style.display = 'none';
+        waModal.style.display = 'flex';
+    };
+    
+    waCloseBtn.addEventListener('click', () => {
+        waModal.style.display = 'none';
+    });
+    
+    waBackBtn.addEventListener('click', () => {
+        waModal.style.display = 'none';
+    });
+    
+    // Close on overlay click
+    waModal.addEventListener('click', (e) => {
+        if (e.target === waModal) {
+            waModal.style.display = 'none';
+        }
+    });
+    
+    waForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        const prod = document.getElementById('wa-product-name').value;
+        const qty = document.getElementById('wa-product-qty').value;
+        const name = document.getElementById('wa-client-name').value;
+        const phone = document.getElementById('wa-client-phone').value;
+        const address = document.getElementById('wa-client-address').value;
+        
+        const message = `Bonjour ÔTAY BOX
+Je souhaite commander :
+Produit : ${prod}
+Quantité : ${qty}
+Nom : ${name}
+Téléphone : ${phone}
+Adresse : ${address}
+Merci.`;
+
+        // Open WhatsApp
+        window.open('https://wa.me/21654050380?text=' + encodeURIComponent(message), '_blank');
+        
+        // Show success
+        waFormContainer.style.display = 'none';
+        waSuccessContainer.style.display = 'block';
+    });
 });
