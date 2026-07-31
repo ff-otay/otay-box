@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+<url>
+<loc>https://otaybox.tn/</loc>
+</url>
+
+<url>
+<loc>https://otaybox.tn/boutique</loc>
+</url>
+
+<url>
+<loc>https://otaybox.tn/contact</loc>
+</url>
+
+</urlset>
