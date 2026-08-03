@@ -483,6 +483,31 @@
             if (!product) {
                 product = productsData[0]; // fallback
             }
+			const schema = {
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": product.title,
+ "image": product.img.startsWith("http") 
+? product.img 
+: "https://otaybox.tn/" + product.img,
+  "description": product.sub,
+  "brand": {
+    "@type": "Brand",
+    "name": "ÔTAY BOX"
+  },
+  "offers": {
+    "@type": "Offer",
+    "url": window.location.href,
+    "priceCurrency": "TND",
+    "price": product.price.replace(/[^\d.]/g, ""),
+    "availability": "https://schema.org/InStock"
+  }
+};
+
+const scriptSchema = document.createElement('script');
+scriptSchema.type = "application/ld+json";
+scriptSchema.textContent = JSON.stringify(schema);
+document.head.appendChild(scriptSchema);
 
             // Render Product Detail
             const container = document.getElementById('product-container');
